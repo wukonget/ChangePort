@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.pengc.changeport">
 
-    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"/>
+    <!-- <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"/> -->
 
     <application
         android:allowBackup="true"
