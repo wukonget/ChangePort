@@ -1,23 +1,18 @@
 apply plugin: 'com.android.application'
 
+def formatCurrentTime(){
+    return new Date().format("yyyy-MM-dd_HH-mm", TimeZone.getTimeZone("GMT+8"))
+}
+
 android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.pengc.changeport"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode APP_VERSION.toInteger()
+        versionName APP_VERSION_NAME
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-    lintOptions {
-      abortOnError false
     }
 
     signingConfigs{
@@ -29,6 +24,34 @@ android {
             keyPassword "123456"
 //            //7.0使用的APK Signature Scheme v2签名方案使外部打入渠道信息会修改签名导致没办法安装 所以目前这里我们需要先禁用掉
 //            v2SigningEnabled false
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+    lintOptions {
+      abortOnError false
+    }
+    applicationVariants.all { variant ->
+        def buildType = variant.buildType.name
+        println("output: " + buildType)
+        if("release".compareToIgnoreCase(buildType) == 0){
+            def moduleName = variant.packageApplication.project.name
+            def versionName = variant.versionName
+            def versionCode = variant.versionCode
+            println("module: " + moduleName + ", versionCode: " + versionCode + ", versionName: " + versionName)
+
+            variant.packageApplication.outputDirectory = new File(rootProject.getRootDir().getAbsolutePath() +
+                    File.separator + "BuildOut" + File.separator + buildType)
+
+            variant.outputs.all {
+                outputFileName = moduleName + '-' + buildType + '-v' + versionName + '-' + formatCurrentTime() + '.apk'
+            }
         }
     }
 }
