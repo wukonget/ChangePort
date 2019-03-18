@@ -38,7 +38,7 @@ android {
       abortOnError false
     }
     applicationVariants.all { variant ->
-        def buildType = variant.buildType.name
+        def buildType = (BUILD_TYPE == null | "".equals(BUILD_TYPE)) ? variant.buildType.name : BUILD_TYPE
         println("output: " + buildType)
         if("release".compareToIgnoreCase(buildType) == 0){
             def moduleName = variant.packageApplication.project.name
@@ -48,7 +48,7 @@ android {
             println("module: " + moduleName + ", versionCode: " + versionCode + ", versionName: " + versionName)
 
             variant.packageApplication.outputDirectory = new File(rootProject.getRootDir().getAbsolutePath() +
-                    File.separator + "BuildOut" + File.separator + buildType)
+                    File.separator + "BuildOut")
 
             variant.outputs.all {
                 outputFileName = moduleName + '-' + buildType + '-v' + versionName + '-' + datetime + '.apk'
