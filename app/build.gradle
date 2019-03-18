@@ -44,13 +44,14 @@ android {
             def moduleName = variant.packageApplication.project.name
             def versionName = variant.versionName
             def versionCode = variant.versionCode
+            def datetime = IS_JENKINS.toBoolean() ? BUILD_DATETIME : formatCurrentTime()
             println("module: " + moduleName + ", versionCode: " + versionCode + ", versionName: " + versionName)
 
             variant.packageApplication.outputDirectory = new File(rootProject.getRootDir().getAbsolutePath() +
                     File.separator + "BuildOut" + File.separator + buildType)
 
             variant.outputs.all {
-                outputFileName = moduleName + '-' + buildType + '-v' + versionName + '-' + formatCurrentTime() + '.apk'
+                outputFileName = moduleName + '-' + buildType + '-v' + versionName + '-' + datetime + '.apk'
             }
         }
     }
